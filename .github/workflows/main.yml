@@ -4,8 +4,9 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'VolumeFloat_Advanced_Source.zip'
+      - 'VolumeFloat_APK_Build_Ready-v2.zip'
       - '.github/workflows/main.yml'
+      - '.github/workflows/main.yaml'
 
 jobs:
   build:
@@ -32,7 +33,7 @@ jobs:
 
       - name: Extract updated project
         run: |
-          unzip -q VolumeFloat_Advanced_Source.zip -d extracted
+          unzip -q VolumeFloat_APK_Build_Ready-v2.zip -d extracted
           test -f extracted/VolumeFloat/settings.gradle.kts
 
       - name: Build APK
