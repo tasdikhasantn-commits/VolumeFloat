@@ -3,10 +3,6 @@ name: Build VolumeFloat APK
 on:
   workflow_dispatch:
   push:
-    paths:
-      - 'VolumeFloat_APK_Build_Ready-v2.zip'
-      - '.github/workflows/main.yml'
-      - '.github/workflows/main.yaml'
 
 jobs:
   build:
@@ -20,11 +16,9 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android SDK packages
-        run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
+      - name: Accept Android SDK Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -33,7 +27,8 @@ jobs:
 
       - name: Extract updated project
         run: |
-          unzip -q VolumeFloat_APK_Build_Ready-v2.zip -d extracted
+          ZIP_FILE=$(ls *.zip | head -n 1)
+          unzip -q "$ZIP_FILE" -d extracted
           test -f extracted/VolumeFloat/settings.gradle.kts
 
       - name: Build APK
@@ -46,3 +41,4 @@ jobs:
           name: VolumeFloat-debug-apk
           path: extracted/VolumeFloat/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+          
